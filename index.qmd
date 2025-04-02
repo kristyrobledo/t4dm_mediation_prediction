@@ -1,0 +1,595 @@
+---
+title: "Beyond the Primary Outcome: Mediation and Predictive Insights in the T4DM trial"
+subtitle: "AUSTRiM presentation April, 2025"
+author: "Dr Kristy Robledo"
+institute: "NHMRC CTC, The University of Sydney"
+format:
+  revealjs:
+    # self-contained: true
+    fig-format: retina
+    toc: true ##overview slide
+    toc-depth: 1
+    number-sections: false
+    toc-title: "Overview of today's talk"
+    theme: [default, "sydney.scss"]
+    code-line-numbers: false
+    slide-number: c
+    scrollable: false
+    pdf-max-pages-per-slide: 1
+    history: false # don't add each slide to browser history
+    self-contained: true
+bibliography: pres_bib.bib
+csl: apa-old-doi-prefix.csl
+execute:
+  echo: false
+---
+
+```{r, echo = FALSE}
+library(tidyverse)
+library(plotly)
+library(naniar)
+library(gtsummary)
+library(gt)
+library(patchwork)
+```
+
+
+## <span style="color:red;">**Inference**</span> (explaining) versus <span style="color:blue;">**Prediction**</span> (future) {.center}
+
+<br>
+
+::: columns
+::: {.column width="15%"}
+{{< fa lightbulb size=5x >}}
+
+:::
+
+::: {.column width="35%"} 
+<center>
+<span style="color:red;">**Explaining**</span> 
+
+- collect data from given sample
+- apply models to test hypotheses (explain relationships)
+</center>
+:::
+
+::: {.column width="15%"}
+{{< fa bullseye size=5x >}}
+:::
+
+::: {.column width="35%"}
+<center>
+<span style="color:blue;">**Prediction**</span> 
+
+- apply a model to data 
+- predicting new or future observations
+</center>
+:::
+:::
+
+::: {.fragment}
+ <center>**Explanatory {{< fa not-equal size=1x >}} predictive** </center>
+:::
+
+::: footer
+[Shmueli (2010) To Explain or to Predict? Statistical Science. 25(3):289-310. DOI: 10.1214/10-STS330](https://doi.org/10.1214/10-STS330)
+:::
+
+
+
+::: notes
+regression models are a common example. 
+
+explanatory power of a model is not the same as the predictive power of a model - and different methods may be appropriate for these two different approaches 
+:::
+
+# What is prediction modelling?
+
+::: notes
+Speaker notes go here. Press `s` to see. 
+:::
+
+
+## <span style="color:red;">Diagnostic</span>  vs <span style="color:blue;">Prognostic</span> models {.center}
+
+<br />
+
+<br />
+
+::: columns
+::: {.column width="15%"}
+{{< fa user-doctor size=5x >}}
+{{< fa magnifying-glass size=5x >}}
+:::
+
+::: {.column width="35%"} 
+<center><span style="color:red;">**Diagnostic**</span> </center>
+::: {.fragment}
+- Predicts the presence or absence of a disease or condition
+:::
+::: {.fragment}
+- e.g. breast cancer detection
+
+:::
+:::
+
+::: {.column width="15%"}
+{{< fa notes-medical size=5x >}}
+{{< fa timeline size=5x >}}
+:::
+
+::: {.column width="35%"}
+<center>
+<span style="color:blue;">**Prognostic**</span> </center>
+::: {.fragment}
+- Prediction of a disease course (including treatment)
+:::
+::: {.fragment}
+- eg. probability of CVD events for a patient with diabetes
+
+:::
+:::
+::: 
+
+## Pipeline for translation of a clinical trial into practice
+
+::: {.fragment}
+::: {data-id="box1" style="width: 200px; height: 150px; border:5px solid green; margin: 10px; position: absolute; top: 300px; left: 50px"}
+<center>**Individual** absolute risk
+(current treatment)
+</center>
+:::
+:::
+
+::: {.fragment}
+::: {data-id="box2" style="background: green; width: 200px; height: 150px; margin: 10px; border-radius: 50px; position: absolute; top: 100px; left: 50px"}
+<center> <br><span style="color:white;">**Risk prediction model**<span>
+</center>
+:::
+:::
+
+::: {.fragment}
+::: {data-id="box2" style="width: 200px; height: 50px; margin: 10px; position: absolute; top: 250px; left: 50px"}
+<center>{{< fa arrow-down size=1x >}}</center>
+:::
+:::
+
+::: {.fragment}
+::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 275px"}
+<center> **x**
+</center>
+:::
+:::
+
+::: {.fragment}
+::: {data-id="box3" style="width: 200px; height: 150px; border:5px solid blue; margin: 10px; position: absolute; top: 300px; left: 350px"}
+<center>Relative risk reduction
+(new treatment)
+</center>
+:::
+:::
+
+::: {.fragment}
+![](triangle.png){style="width: 300px; position: absolute; top: 150px; left: 350px"}
+:::
+
+::: {.fragment}
+::: {data-id="box2" style="width: 200px; height: 50px; margin: 10px; position: absolute; top: 250px; left: 350px"}
+<center>{{< fa arrow-down size=1x >}}</center>
+:::
+:::
+
+::: {.fragment}
+::: {data-id="box2" style="background: blue; width: 350px; height: 80px; margin: 10px; border-radius: 50px; position: absolute; top: 50px; left: 325px"}
+<center> <span style="color:white;">**Predictive Biomarker** (clinical trial)<span>
+</center>
+:::
+:::
+::: {.fragment}
+::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 120px; left: 470px"}
+<center>{{< fa arrow-down size=1x >}}</center>
+:::
+:::
+::: {.fragment}
+::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 575px"}
+<center> **=**
+</center>
+:::
+:::
+
+::: {.fragment}
+::: {data-id="box3" style="width: 200px; height: 150px; border:5px solid black; margin: 10px; position: absolute; top: 300px; left: 650px"}
+<center>**Personalised** absolute risk reduction
+</center>
+:::
+:::
+
+::: {.fragment}
+::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 850px"}
+<center> {{< fa arrow-right size=1x >}}
+</center>
+:::
+:::
+
+
+::: {.fragment}
+::: {data-id="box3" style="background: orange; width: 100px; height: 100px;  margin: 10px; position: absolute; top: 325px; left: 900px"}
+<center>size of benefit
+</center>
+:::
+:::
+
+::: {.fragment}
+::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 1000px"}
+<center> {{< fa arrow-right size=1x >}}
+</center>
+:::
+:::
+::: {.fragment}
+::: {data-id="box1" style="background: #ee7600; width: 300px; height: 250px; border-radius: 60px; margin: 10px; position: absolute; top: 250px; left: 1050px"}
+<center><br><br>**Decision for practice and policy**
+</center>
+:::
+:::
+  
+
+::: notes
+also Resources/ Community values and Patient's preferences and utilities 
+informaiton about harm from clinical trial
+
+basically - baseline risk + clinical trial effect -> personalised care -> policy
+
+:::
+
+
+# Methods for developing predictive models
+
+
+##  {background-image="wordcloud_pred.png" background-size="contain"}
+
+
+# TRIPOD+AI guidelines 
+{background-image="tripod.png" background-size="contain"}
+
+:::footer
+[https://www.bmj.com/content/385/bmj-2023-078378](https://www.bmj.com/content/385/bmj-2023-078378)
+:::
+
+# Prediction example: T4DM risk score model
+
+## Development cohort: T4DM trial
+
+:::columns
+::: {.column width=50%"}
+
+- males aged 50 to 74 years, 
+- waist circumference ≥95 cm, 
+- impaired glucose tolerance or newly diagnosed type 2 diabetes,
+- fasting testosterone ≤14 nmol/L
+
+
+<br>
+
+[**Primary outcome:**]{.blue} Diabetes at two years, as measured by 2-hour glucose by OGTT $\ge$ 11.1mmol/L
+
+:::
+
+
+
+::: {.column width=50%"}
+::: {.fragment}
+![](short_flow.png){style="width: 700px;height:600px; position: absolute; top: 50px; left: 550px"}
+:::
+:::
+:::
+
+::: footer
+Wittert G, Bracken K, Robledo KP, et al. Testosterone treatment to prevent or revert type 2 diabetes in men enrolled in a lifestyle programme (T4DM): A randomised, double-blind, placebo-controlled, 2-year, phase 3b trial. The Lancet Diabetes & Endocrinology 2021;9:32–45. [https://doi.org/10.1016/S2213-8587(20)30367-3](https://doi.org/10.1016/S2213-8587(20)30367-3)
+:::
+
+```{r, eval=FALSE,echo=FALSE}
+##create wordcloud - this only needs to be run once to create the wordcloud
+
+library(wordcloud2)
+library(tidyverse)
+library(webshot)
+library(htmlwidgets)
+
+df <-as_tibble(
+  riskfactors<-c("risk factors", "age", "waist circumference", "weight", "marital status", "current smoker", "shift worker status", "SSRI use", "family history of diabetes", "skeletal muscle mass", "total fat mass", "abdominal fat %" , "total testosterone", "estradiol (E2)", "sex hormone-binding globulin (SHBG)", "2-hour glucose", "Fasting glucose", "glycated haemoglobin (HbA1c)", "insulin", "total cholesterol", "LDL-c", "HDL-c",  "triglycerides", "insulin resistance (HOMA-IR)", "steady state beta cell function (HOMA-B)" , 
+               "Lower urinary tract symptoms (LUTS)", 
+               "SF-12 physical" ,"SF-12 mental", "MAC-relative to yourself", "MAC- within society generally", "Sense of Coherence", "Pearlin’s Personal Mastery Scale", "CES-Depression Inventory",  "Sufficient exercise"), 
+  
+) %>%
+  add_column(freq = c(2, rep(1,33)))
+
+
+riskf<-wordcloud2(data=df, size=0.2, color='random-dark',shape = 'rectangle')
+saveWidget(riskf, "tmp.html", selfcontained = F)
+webshot("tmp.html", "wordcloud.png", delay = 10, vwidth=600, vheight = 400)
+
+```
+
+
+
+##  {background-image="wordcloud.png" background-size="contain"}
+
+## Preliminary step: Data completeness
+
+
+```{r, fig.cap = "Intersection of missingness over risk factors in the 783 participants (all eligible cohort)"}
+eligdf<-readRDS('eligibledf.RDS')
+compdf<-readRDS('compdf.RDS')
+
+eligdf %>% 
+  select(-subjectkey,-glucose) %>%
+  gg_miss_upset(nsets = 10) 
+```
+
+:::footer
+naniar::gg__miss_upset() function to plot the missingness using an upset plot
+:::
+
+## Step one: Univariate analyses
+
+
+```{r, tab.cap="Summary and univariate logistic regression models for the 35 risk factors"}
+compdf %>% 
+  select(-subjectkey, -ogtt_gt11,-glucose) %>%
+  mutate(bmleanms=bmleanms/1000,
+    bmfatms=bmfatms/1000) %>%
+  tbl_summary(type = list(mac_1~ "continuous")) ->t1
+
+compdf %>% 
+  select(-subjectkey, -treat,-glucose) %>%
+  mutate(bmleanms=bmleanms/1000,
+    bmfatms=bmfatms/1000) %>%
+  tbl_uvregression(method = glm, 
+                   y=ogtt_gt11, 
+                   method.args = list(family = binomial(link="logit")),
+                   exponentiate = TRUE, 
+                   hide_n =TRUE) %>%
+  add_global_p() %>%
+  sort_p() ->t2
+
+tbl_merge(list(t1,t2), tab_spanner = c("Summary", "Univariate models")) %>%
+  as_gt() |>
+  tab_options(
+    container.overflow.y=TRUE, 
+    ihtml.active=TRUE,
+    ihtml.use_sorting=FALSE,
+    ihtml.use_search=TRUE,
+    ihtml.use_highlight=TRUE,
+    ihtml.use_compact_mode=TRUE,
+    quarto.use_bootstrap=TRUE)
+```
+
+:::footer
+gtsummary::tbl_summary() function to summarise the data, combined with gtsummary::tbl_uvregression() to run univariate logistic regression models, merged together using gtsummary::tbl_merge()
+:::
+
+## Step two: 33 to 16 risk factors 
+
+```{r, fig.cap = "Visualisation of coefficients from LASSO model, with all 33 risk factors included", fig.dim=c(6,6)}
+glmnet.fit1<-readRDS("glmnet_fit1.rds")
+
+plotmo::plot_glmnet(glmnet.fit1, label=16)
+```
+
+
+
+## Step three: select from 16 risk factors + fit model
+
+:::columns
+::: {.column width=50%"}
+
+- LASSO penalisation^[Zhao S, Daniela Witten, Ali Shojaie "In Defense of the Indefensible: A Very Naïve Approach to High-Dimensional Inference," Statistical Science. 36(4), 562-577, (November 2021) [https://doi.org/10.1214/20-STS815](https://doi.org/10.1214/20-STS815)] using 469 with complete data
+- 10 fold cross validation was used to maximise AUC
+- dotted line denotes max AUC, with two non-zero covariates selected in the model (HbA1c and 2-hour glucose)
+- refit without penalisation, with AUC **0.809** (n= 665 patients)
+- including T treatment^[ **T treatment was associated with 40% reduction in diabetes at two years**], AUC **0.816**.
+
+:::
+
+
+
+::: {.column width=50%"}
+
+```{r, fig.dim=c(5,5)}
+load("lasso_cv.Rdata")
+plotly::ggplotly(lasso.cv +
+                   xlab("Log(lambda)") )
+```
+
+:::
+:::
+
+
+## Step three: exploration of interactions
+
+
+```{r}
+load("p1.Rdata")
+load("m1_p1.Rdata")
+load("m3_p1.Rdata")
+load("m2_p1.Rdata")
+load("distp.Rdata")
+
+# p1+m1_p1+m3_p1+m2_p1+distp+distp +
+#   plot_annotation(tag_levels = 'A')+
+#   plot_layout(nrow = 3, 
+#               heights = c(1,1,0.4), 
+#               guides='collect') &
+#   theme(legend.position='bottom')
+```
+
+
+:::columns
+::: {.column width=50%"}
+
+:::fragment
+```{r}
+ggplotly(p1)
+```
+:::
+
+:::fragment
+```{r}
+ggplotly(m1_p1)
+```
+:::
+
+::: 
+
+::: {.column width=50%"}
+
+:::fragment
+```{r}
+ggplotly(m3_p1)
+```
+:::
+
+
+:::fragment
+```{r}
+ggplotly(m2_p1)
+```
+:::
+
+:::
+
+
+## Validation
+
+:::columns
+::: {.column width=30%"}
+- EXTEND45 cohort of 267,357 participants aged 45 and up
+- conduct approved by the University of New South Wales HREC
+- baseline questionnaires collected Jan 2006 - Dec 2009
+- lab data linked up to July 2013
+:::
+
+::: {.column width=70%"}
+```{r, echo=FALSE}
+DiagrammeR::grViz("digraph {
+  graph [layout = dot, rankdir = TB]
+  
+  node [shape = rectangle]        
+  rec1 [label = 'HbA1c and 2-hour glucose within 6 months (baseline, n=2026)']
+  rec2 [label = 'baseline 2-hour glucose <11.1mmol/L & HbA1c<6.5 (n=1189)']
+  rec3 [label =  'outcome 2-hour glucose identified 1-4yr post baseline (n=452)']
+  rec4 [label = 'restrict to males (n=221)']
+  
+  # edge definitions with the node IDs
+  rec1 -> rec2 -> rec3 -> rec4
+  }",
+                  height = 300)
+```
+
+:::
+:::
+
+## Step four: Model performance (**Discrimination**)
+
+![](ROC.png)
+
+:::notes
+Discrimination- separate individuals who develop events from those who do not
+ 
+ T4DM AUC 0.820 (95% CI: 0.762-0.877) model has high discriminating ability.
+extend45 - 0.806 (95% CI: 0.735-0.877). 
+:::
+
+## Step four: Model performance (**Calibration**)
+
+::: {layout-ncol=2}
+![](cal_dev.png)
+
+![](cal_v.png)
+:::
+
+
+:::notes
+Risk groups: 25%, middle 50%, top 25% of risk
+A comparison of the predicted probability versus the observed probability for each risk group is shown in Figure, demonstrating that there is a higher probability observed than predicted in the model validation cohort.
+
+Calibration - T4DM
+The Brier score was low at 0.07, the Hosmer–Lemeshow χ^2 statistic was 3.92, (p=0.86), and the p-value for the Osius-Rojek and Stukel tests were 0.71 and 0.04 respectively, indicating good calibration within the model development cohort, other than the Stukel test.
+
+Extend45
+The calibration according to the Hosmer-Lemeshow goodness of fit test was poor (χ^2=106, p<0.001). However the Brier score for assessing prediction accuracy was low at 0.13 and the p-value for the Stukel test was 0.62, indicating a good fit, while the p-value for the Osius-Rojek test was p<0.001. 
+
+
+Calibration measures how accurately the model’s predictions match overall observed event rates.
+:::
+
+## Step five: Recalibration
+
+![](recalibration.png)
+
+
+:::notes
+Given this under-prediction, recalibration in the large was performed and the intercept was estimated as 0.67. Once this was taken into account, the predicted probabilities from the model showed better alignment with the observed probabilities 
+:::
+
+
+##  {background-image="snip1.PNG" background-size="contain"}
+
+:::footer
+[https://clinical-risk-calculators.sydney.edu.au/Nomograms?ToolId=25](https://clinical-risk-calculators.sydney.edu.au/Nomograms?ToolId=25)
+:::
+
+
+
+# Inference example: T4DM Mediation analysis
+
+
+##  Mediation analysis
+
+:::incremental
+- tool to disentangle potential causal pathways in data from clinical trials
+- T4DM found a 40% reduction in diabetes with testosterone treatment 
+- also changes in body composition with T treatment (decreased fat mass, increased muscle mass)
+- was it the direct effect of testosterone treatment? Or the testosterone-induced changes in body composition?
+:::
+
+:::fragment
+![](mediation.PNG)
+:::
+
+:::footer
+[https://academic.oup.com/ejendo/article/189/1/50/7219871](https://academic.oup.com/ejendo/article/189/1/50/7219871)
+:::
+
+:::notes 
+In randomised controlled trials (RCTs), the mechanisms by which outcomes are induced by health interventions can be investigated by mediation analysis.1 Mediation analyses have emerged as a powerful tool to disentangle potential causal pathways in data from clinical trials. It has been widely applied in the field of psychology2 but has also been used in other fields to understand how treatments work in RCTs.3 They enable researchers to decompose the treatment effect into an indirect component mediated through given variable(s) and the remaining direct effect of treatment or effects of unmeasured mediators. Identifying these mediating variables can help clinicians refine and adapt to improve the effectiveness of interventions and guide their implementation.
+:::
+
+## The causal pathway for T4DM
+
+![](mediation2.PNG)
+
+:::notes
+At least part of the testosterone treatment effect was found to be mediated by changes in fat mass, abdominal fat, skeletal muscle mass, grip strength, SHBG, and E2, but predominantly by changes in fat mass.
+:::
+
+# Next steps (prediction)
+
+
+- model stability (add reference)
+- development of risk prediction models within individual patient data meta-analysis projects
+- explore changing risk factors over the clinical trial, and the effect on prediction
+
+- inference when there are non-proportional hazards
+
+## <span style="color:red;">**Thank you!**</span>  {.center}
+
+- {{< fa circle-question size=2x >}}
+ questions? 
+- {{< fa comments size=2x >}}
+ come chat with me if you want to know more
+- {{< fa chalkboard size=2x >}} Slides available at: [https://kristyrobledo.github.io/predictionmodelling_talk/](https://kristyrobledo.github.io/predictionmodelling_talk/)
+- Prediction paper code: 
+- Mediation paper code: [https://github.com/kristyrobledo/T4DM_mediation_paper](https://github.com/kristyrobledo/T4DM_mediation_paper)
+
+
