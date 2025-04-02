@@ -7,7 +7,7 @@ format:
   revealjs:
     # self-contained: true
     fig-format: retina
-    toc: true ##overview slide
+    #toc: true ##overview slide
     toc-depth: 1
     number-sections: false
     toc-title: "Overview of today's talk"
@@ -18,10 +18,15 @@ format:
     pdf-max-pages-per-slide: 1
     history: false # don't add each slide to browser history
     self-contained: true
+    transition: slide
+    background-transition: fade
 bibliography: pres_bib.bib
 csl: apa-old-doi-prefix.csl
 execute:
   echo: false
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, echo = FALSE}
@@ -31,25 +36,36 @@ library(naniar)
 library(gtsummary)
 library(gt)
 library(patchwork)
+library(haven)
+library(janitor)
+library(labelled)
 ```
 
+# Overview of today's talk
 
-## <span style="color:red;">**Inference**</span> (explaining) versus <span style="color:blue;">**Prediction**</span> (future) {.center}
+-   Prediction versus inference
+-   What is prediction modelling?
+-   Prediction example: T4DM risk score model
+-   Inference example: T4DM Mediation analysis
+-   The future...
+
+## [**Inference**]{style="color:red;"} (explaining) versus [**Prediction**]{style="color:blue;"} (future) {.center}
 
 <br>
 
-::: columns
+::::::: columns
 ::: {.column width="15%"}
 {{< fa lightbulb size=5x >}}
-
 :::
 
-::: {.column width="35%"} 
+::: {.column width="35%"}
 <center>
-<span style="color:red;">**Explaining**</span> 
 
-- collect data from given sample
-- apply models to test hypotheses (explain relationships)
+[**Explaining**]{style="color:red;"}
+
+-   collect data from given sample
+-   apply models to test hypotheses (explain relationships)
+
 </center>
 :::
 
@@ -59,232 +75,226 @@ library(patchwork)
 
 ::: {.column width="35%"}
 <center>
-<span style="color:blue;">**Prediction**</span> 
 
-- apply a model to data 
-- predicting new or future observations
+[**Prediction**]{style="color:blue;"}
+
+-   apply a model to data
+-   predicting new or future observations
+
 </center>
 :::
-:::
+:::::::
 
-::: {.fragment}
- <center>**Explanatory {{< fa not-equal size=1x >}} predictive** </center>
+::: fragment
+<center>**Explanatory** {{< fa not-equal size=1x >}}
+**predictive**</center>
 :::
 
 ::: footer
-[Shmueli (2010) To Explain or to Predict? Statistical Science. 25(3):289-310. DOI: 10.1214/10-STS330](https://doi.org/10.1214/10-STS330)
+[Shmueli (2010) To Explain or to Predict? Statistical Science.
+25(3):289-310. DOI:
+10.1214/10-STS330](https://doi.org/10.1214/10-STS330)
 :::
 
-
-
 ::: notes
-regression models are a common example. 
+regression models are a common example.
 
-explanatory power of a model is not the same as the predictive power of a model - and different methods may be appropriate for these two different approaches 
+explanatory power of a model is not the same as the predictive power of
+a model - and different methods may be appropriate for these two
+different approaches
 :::
 
 # What is prediction modelling?
 
 ::: notes
-Speaker notes go here. Press `s` to see. 
+Speaker notes go here. Press `s` to see.
 :::
 
-
-## <span style="color:red;">Diagnostic</span>  vs <span style="color:blue;">Prognostic</span> models {.center}
+## [Diagnostic]{style="color:red;"} vs [Prognostic]{style="color:blue;"} models {.center}
 
 <br />
 
 <br />
 
-::: columns
+::::::::::: columns
 ::: {.column width="15%"}
-{{< fa user-doctor size=5x >}}
-{{< fa magnifying-glass size=5x >}}
+{{< fa user-doctor size=5x >}} {{< fa magnifying-glass size=5x >}}
 :::
 
-::: {.column width="35%"} 
-<center><span style="color:red;">**Diagnostic**</span> </center>
-::: {.fragment}
-- Predicts the presence or absence of a disease or condition
-:::
-::: {.fragment}
-- e.g. breast cancer detection
+::::: {.column width="35%"}
+<center>[**Diagnostic**]{style="color:red;"}</center>
 
+::: fragment
+-   Predicts the presence or absence of a disease or condition
 :::
+
+::: fragment
+-   e.g. breast cancer detection
 :::
+:::::
 
 ::: {.column width="15%"}
-{{< fa notes-medical size=5x >}}
-{{< fa timeline size=5x >}}
+{{< fa notes-medical size=5x >}} {{< fa timeline size=5x >}}
 :::
 
-::: {.column width="35%"}
-<center>
-<span style="color:blue;">**Prognostic**</span> </center>
-::: {.fragment}
-- Prediction of a disease course (including treatment)
-:::
-::: {.fragment}
-- eg. probability of CVD events for a patient with diabetes
+::::: {.column width="35%"}
+<center>[**Prognostic**]{style="color:blue;"}</center>
 
+::: fragment
+-   Prediction of a disease course (including treatment)
 :::
+
+::: fragment
+-   eg. probability of CVD events for a patient with diabetes
 :::
-::: 
+:::::
+:::::::::::
 
 ## Pipeline for translation of a clinical trial into practice
 
-::: {.fragment}
+:::: fragment
 ::: {data-id="box1" style="width: 200px; height: 150px; border:5px solid green; margin: 10px; position: absolute; top: 300px; left: 50px"}
-<center>**Individual** absolute risk
-(current treatment)
-</center>
+<center>**Individual** absolute risk (current treatment)</center>
 :::
-:::
+::::
 
-::: {.fragment}
+:::: fragment
 ::: {data-id="box2" style="background: green; width: 200px; height: 150px; margin: 10px; border-radius: 50px; position: absolute; top: 100px; left: 50px"}
-<center> <br><span style="color:white;">**Risk prediction model**<span>
-</center>
+<center><br><span style="color:white;">**Risk prediction
+model**<span></center>
 :::
-:::
+::::
 
-::: {.fragment}
+:::: fragment
 ::: {data-id="box2" style="width: 200px; height: 50px; margin: 10px; position: absolute; top: 250px; left: 50px"}
-<center>{{< fa arrow-down size=1x >}}</center>
+{{< fa arrow-down size=1x >}}
 :::
-:::
+::::
 
-::: {.fragment}
+:::: fragment
 ::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 275px"}
-<center> **x**
-</center>
+<center>**x**</center>
 :::
-:::
+::::
 
-::: {.fragment}
+:::: fragment
 ::: {data-id="box3" style="width: 200px; height: 150px; border:5px solid blue; margin: 10px; position: absolute; top: 300px; left: 350px"}
-<center>Relative risk reduction
-(new treatment)
-</center>
+<center>Relative risk reduction (new treatment)</center>
 :::
-:::
+::::
 
-::: {.fragment}
+::: fragment
 ![](triangle.png){style="width: 300px; position: absolute; top: 150px; left: 350px"}
 :::
 
-::: {.fragment}
+:::: fragment
 ::: {data-id="box2" style="width: 200px; height: 50px; margin: 10px; position: absolute; top: 250px; left: 350px"}
-<center>{{< fa arrow-down size=1x >}}</center>
+{{< fa arrow-down size=1x >}}
 :::
-:::
+::::
 
-::: {.fragment}
+:::: fragment
 ::: {data-id="box2" style="background: blue; width: 350px; height: 80px; margin: 10px; border-radius: 50px; position: absolute; top: 50px; left: 325px"}
-<center> <span style="color:white;">**Predictive Biomarker** (clinical trial)<span>
-</center>
+<center><span style="color:white;">**Predictive Biomarker** (clinical
+trial)<span></center>
 :::
-:::
-::: {.fragment}
+::::
+
+:::: fragment
 ::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 120px; left: 470px"}
-<center>{{< fa arrow-down size=1x >}}</center>
+{{< fa arrow-down size=1x >}}
 :::
-:::
-::: {.fragment}
+::::
+
+:::: fragment
 ::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 575px"}
-<center> **=**
-</center>
+<center>**=**</center>
 :::
-:::
+::::
 
-::: {.fragment}
+:::: fragment
 ::: {data-id="box3" style="width: 200px; height: 150px; border:5px solid black; margin: 10px; position: absolute; top: 300px; left: 650px"}
-<center>**Personalised** absolute risk reduction
-</center>
+<center>**Personalised** absolute risk reduction</center>
 :::
-:::
+::::
 
-::: {.fragment}
+:::: fragment
 ::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 850px"}
-<center> {{< fa arrow-right size=1x >}}
-</center>
+{{< fa arrow-right size=1x >}}
 :::
-:::
+::::
 
-
-::: {.fragment}
+:::: fragment
 ::: {data-id="box3" style="background: orange; width: 100px; height: 100px;  margin: 10px; position: absolute; top: 325px; left: 900px"}
-<center>size of benefit
-</center>
+<center>size of benefit</center>
 :::
-:::
+::::
 
-::: {.fragment}
+:::: fragment
 ::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 1000px"}
-<center> {{< fa arrow-right size=1x >}}
-</center>
+{{< fa arrow-right size=1x >}}
 :::
-:::
-::: {.fragment}
+::::
+
+:::: fragment
 ::: {data-id="box1" style="background: #ee7600; width: 300px; height: 250px; border-radius: 60px; margin: 10px; position: absolute; top: 250px; left: 1050px"}
-<center><br><br>**Decision for practice and policy**
-</center>
+<center><br><br>**Decision for practice and policy**</center>
 :::
-:::
-  
+::::
 
 ::: notes
-also Resources/ Community values and Patient's preferences and utilities 
+also Resources/ Community values and Patient's preferences and utilities
 informaiton about harm from clinical trial
 
-basically - baseline risk + clinical trial effect -> personalised care -> policy
-
+basically - baseline risk + clinical trial effect -\> personalised care
+-\> policy
 :::
-
 
 # Methods for developing predictive models
 
-
 ##  {background-image="wordcloud_pred.png" background-size="contain"}
 
+## Current reporting guidelines
 
-# TRIPOD+AI guidelines 
-{background-image="tripod.png" background-size="contain"}
+![](tripod.png) 
 
-:::footer
-[https://www.bmj.com/content/385/bmj-2023-078378](https://www.bmj.com/content/385/bmj-2023-078378)
+::: footer
+<https://www.bmj.com/content/385/bmj-2023-078378>.
+
 :::
 
 # Prediction example: T4DM risk score model
 
+##  {background-image="ejepub.PNG" background-size="contain"}
+
 ## Development cohort: T4DM trial
 
-:::columns
-::: {.column width=50%"}
-
-- males aged 50 to 74 years, 
-- waist circumference ≥95 cm, 
-- impaired glucose tolerance or newly diagnosed type 2 diabetes,
-- fasting testosterone ≤14 nmol/L
-
+:::::: columns
+::: {.column width="50%\""}
+-   males aged 50 to 74 years,
+-   waist circumference ≥95 cm,
+-   impaired glucose tolerance or newly diagnosed type 2 diabetes,
+-   fasting testosterone ≤14 nmol/L
 
 <br>
 
-[**Primary outcome:**]{.blue} Diabetes at two years, as measured by 2-hour glucose by OGTT $\ge$ 11.1mmol/L
-
+[**Primary outcome:**]{.blue} Diabetes at two years, as measured by
+2-hour glucose by OGTT $\ge$ 11.1mmol/L
 :::
 
-
-
-::: {.column width=50%"}
-::: {.fragment}
+:::: {.column width="50%\""}
+::: fragment
 ![](short_flow.png){style="width: 700px;height:600px; position: absolute; top: 50px; left: 550px"}
 :::
-:::
-:::
+::::
+::::::
 
 ::: footer
-Wittert G, Bracken K, Robledo KP, et al. Testosterone treatment to prevent or revert type 2 diabetes in men enrolled in a lifestyle programme (T4DM): A randomised, double-blind, placebo-controlled, 2-year, phase 3b trial. The Lancet Diabetes & Endocrinology 2021;9:32–45. [https://doi.org/10.1016/S2213-8587(20)30367-3](https://doi.org/10.1016/S2213-8587(20)30367-3)
+Wittert G, Bracken K, Robledo KP, et al. Testosterone treatment to
+prevent or revert type 2 diabetes in men enrolled in a lifestyle
+programme (T4DM): A randomised, double-blind, placebo-controlled,
+2-year, phase 3b trial. The Lancet Diabetes & Endocrinology
+2021;9:32–45. <https://doi.org/10.1016/S2213-8587(20)30367-3>
 :::
 
 ```{r, eval=FALSE,echo=FALSE}
@@ -310,12 +320,9 @@ webshot("tmp.html", "wordcloud.png", delay = 10, vwidth=600, vheight = 400)
 
 ```
 
-
-
 ##  {background-image="wordcloud.png" background-size="contain"}
 
 ## Preliminary step: Data completeness
-
 
 ```{r, fig.cap = "Intersection of missingness over risk factors in the 783 participants (all eligible cohort)"}
 eligdf<-readRDS('eligibledf.RDS')
@@ -326,12 +333,12 @@ eligdf %>%
   gg_miss_upset(nsets = 10) 
 ```
 
-:::footer
-naniar::gg__miss_upset() function to plot the missingness using an upset plot
+::: footer
+naniar::gg\_\_miss_upset() function to plot the missingness using an
+upset plot
 :::
 
 ## Step one: Univariate analyses
-
 
 ```{r, tab.cap="Summary and univariate logistic regression models for the 35 risk factors"}
 compdf %>% 
@@ -364,11 +371,13 @@ tbl_merge(list(t1,t2), tab_spanner = c("Summary", "Univariate models")) %>%
     quarto.use_bootstrap=TRUE)
 ```
 
-:::footer
-gtsummary::tbl_summary() function to summarise the data, combined with gtsummary::tbl_uvregression() to run univariate logistic regression models, merged together using gtsummary::tbl_merge()
+::: footer
+gtsummary::tbl_summary() function to summarise the data, combined with
+gtsummary::tbl_uvregression() to run univariate logistic regression
+models, merged together using gtsummary::tbl_merge()
 :::
 
-## Step two: 33 to 16 risk factors 
+## Step two: 33 to 16 risk factors
 
 ```{r, fig.cap = "Visualisation of coefficients from LASSO model, with all 33 risk factors included", fig.dim=c(6,6)}
 glmnet.fit1<-readRDS("glmnet_fit1.rds")
@@ -376,37 +385,44 @@ glmnet.fit1<-readRDS("glmnet_fit1.rds")
 plotmo::plot_glmnet(glmnet.fit1, label=16)
 ```
 
-
+::: footer
+plotmo::plot_glmnet() to plot a glmnet::glmnet() object
+:::
 
 ## Step three: select from 16 risk factors + fit model
 
-:::columns
-::: {.column width=50%"}
-
-- LASSO penalisation^[Zhao S, Daniela Witten, Ali Shojaie "In Defense of the Indefensible: A Very Naïve Approach to High-Dimensional Inference," Statistical Science. 36(4), 562-577, (November 2021) [https://doi.org/10.1214/20-STS815](https://doi.org/10.1214/20-STS815)] using 469 with complete data
-- 10 fold cross validation was used to maximise AUC
-- dotted line denotes max AUC, with two non-zero covariates selected in the model (HbA1c and 2-hour glucose)
-- refit without penalisation, with AUC **0.809** (n= 665 patients)
-- including T treatment^[ **T treatment was associated with 40% reduction in diabetes at two years**], AUC **0.816**.
-
+::::: columns
+::: {.column width="50%\""}
+-   LASSO penalisation[^1] using 469 with complete data
+-   10 fold cross validation was used to maximise AUC
+-   dotted line denotes max AUC, with two non-zero covariates selected
+    in the model (HbA1c and 2-hour glucose)
+-   refit without penalisation, with AUC **0.809** (n= 665 patients)
+-   including T treatment[^2], AUC **0.816**.
 :::
 
-
-
-::: {.column width=50%"}
-
-```{r, fig.dim=c(5,5)}
+::: {.column width="50%\""}
+```{r, fig.dim=c(3,3)}
 load("lasso_cv.Rdata")
 plotly::ggplotly(lasso.cv +
                    xlab("Log(lambda)") )
 ```
-
 :::
+:::::
+
+[^1]: Zhao S, Daniela Witten, Ali Shojaie "In Defense of the
+    Indefensible: A Very Naïve Approach to High-Dimensional Inference,"
+    Statistical Science. 36(4), 562-577, (November 2021)
+    <https://doi.org/10.1214/20-STS815>
+
+[^2]: **T treatment was associated with 40% reduction in diabetes at two
+    years**
+
+::: footer
+plotly::ggplotly() to interactively plot a ggplot object
 :::
 
-
-## Step three: exploration of interactions
-
+## Step four: exploration of interactions
 
 ```{r}
 load("p1.Rdata")
@@ -423,173 +439,572 @@ load("distp.Rdata")
 #   theme(legend.position='bottom')
 ```
 
-
-:::columns
-::: {.column width=50%"}
-
-:::fragment
-```{r}
+::::::::: columns
+::::: {.column width="50%\""}
+::: fragment
+```{r, fig.dim=c(4,4)}
 ggplotly(p1)
 ```
 :::
 
-:::fragment
+::: fragment
+```{r, fig.dim=c(4,4)}
+ggplotly(m1_p1+theme(legend.position = "none"))
+```
+:::
+:::::
+
+::::: {.column width="50%\""}
+::: fragment
+```{r,  fig.dim=c(4,4)}
+ggplotly(m3_p1+theme(legend.position = "none"))
+```
+:::
+
+::: fragment
+```{r,  fig.dim=c(4,4)}
+ggplotly(m2_p1+theme(legend.position = "none"))
+```
+:::
+:::::
+:::::::::
+
+::: notes
+There was no interaction between treatment and baseline glucose, or
+treatment and age at baseline. Let us investigate the following four
+models for the interaction between Hba1c and treatment. Note that the
+median HbA1c level is 5.6%. (A) a typical linear interaction (B) a
+piecewise linear regression approach (or ‘broken stick’) allowing
+different intercepts for treatment, and different slopes for each
+treatment before and after 5.6% (C) a reduced broken stick model, with
+an intercept for treatment but a common slope before 5.6%, and different
+slopes for each treatment before and after 5.6% (D) a further reduced
+broken stick model, with a common intercept and slope before 5.6%, and
+different slopes for each treatment before and after 5.6% From the
+Figure below, there does not appear to be a difference between (C) and
+(D), and on investigation of the model fit (Table S3), model (D) has the
+lowest AIC, indicating best model fit, as well as a comparable
+C-statistic to other models.
+:::
+
+## 3D plot
+
+
+##Setup for figure
 ```{r}
-ggplotly(m1_p1)
+load("baselinemodel_age.Rdata")
+
+gridlines = 100
+
+#prediction matrix
+cxhba1c <- seq(min(4.1), max(6.4), length.out = gridlines)
+cxglu2h <- seq(min(7.7), max(11), length.out = gridlines)
+
+xy <- cbind(expand.grid( cxhba1c=cxhba1c, cxglu2h = cxglu2h))
+
+tibble(xy, treat=0) |>
+  mutate(
+    age=59,
+    t_x = case_when(treat==0 ~0,
+                treat==1 & cxhba1c<5.6  ~0,
+                treat==1 & cxhba1c>=5.6~ cxhba1c-5.6)) ->predmat_t0
+
+tibble(xy, treat=1) |>
+  mutate(
+    age=59, 
+    t_x = case_when(treat==0 ~0,
+                    treat==1 & cxhba1c<5.6  ~0,
+                    treat==1 & cxhba1c>=5.6~ cxhba1c-5.6)) ->predmat_t1
+
+## calculate predictions
+z.pred_t0 <- matrix(predict(baselinemodel_age,
+                            type=c("response"),
+                            newdata = predmat_t0)*100,
+                 nrow = gridlines, ncol = gridlines)
+
+z.pred_t1 <- matrix(predict(baselinemodel_age,
+                            type=c("response"),
+                            newdata = predmat_t1)*100,
+                    nrow = gridlines, ncol = gridlines)
 ```
+
+
+```{r, fig.cap="3D plot of the interaction between HbA1c, 2-hr glucose and treatment", fig.dim=c(8,6)}
+fig <- plot_ly(showscale=FALSE) |>
+  add_surface(x = cxhba1c,
+              y= cxglu2h,
+              z = ~z.pred_t0,
+              name = "Placebo",
+              hovertext="Probability of diabetes",
+              colorscale = list(c(0,1),c("rgb(220,20,60)","rgb(178,34,34)")))  |>
+  add_surface(x = cxhba1c,
+              y= cxglu2h,
+              z = ~z.pred_t1,
+              name = "Testosterone",
+              hovertext="Probability of diabetes",
+              colorscale = list(c(0,1),c("rgb(0,0,255)","rgb(0,0,128)"))) |>
+  layout(scene = list(
+    xaxis=list(title='HbA1c (%)',titlefont = list(size = 10)),
+    yaxis=list(title='2-hr glucose (mmol/L)',titlefont = list(size = 10)),
+    zaxis=list(title='Probability of diabetes (%)',titlefont = list(size = 10))))
+
+fig
+```
+
+:::footer
+plotly::plot_ly() function from the plotly package to create a 3D plot (using `add_surface`)
 :::
 
-::: 
+## Step five: Sensitivity analyses
 
-::: {.column width=50%"}
+1.  Perform multiple imputation for the model with the 16 risk factors
+    (30 datasets)
+2.  10-fold CV using LASSO on each of the 30 datasets
+3.  Add each covariate back into the base model
 
-:::fragment
+::: notes
+The first sensitivity analysis compared a model of the 16 risk factors
+plus testosterone treatment in those with complete cases (n=469) to
+multiple imputation to include all participants (n=783). Estimates were
+similar from the two models (Table S3), as were C-statistics, with a
+C-statistic of 0.839 from the complete cases model and 0.829 using
+multiple imputation.
+
+2: Next, step two (10-fold cross validation using LASSO penalization to
+determine the optimum lambda) was performed on each of the 30 imputed
+datasets from the previous sensitivity analysis. The mean lamba.min is
+0.018, with sd = 0.009, giving 95% CI 0.015-0.022. The result from the
+CC analysis was 0.036. Although these values are different, the larger
+log(lambda) value from the MI analysis corresponds to the same 2
+covariates included in the model (see Figure below), in addition to
+treatment, current smoker and shift worker.The C-statistics were only
+marginally improved (\<1%) with the addition of these two risk factors
+(Table S7), and the factors did not independently predict risk in the
+multivariate model, therefore they were not added to the final model.
+
+3: adding each covaraite into teh base model the highest C-statistic for
+the addition of an additional covariate was 0.827, with the inclusion of
+age.
+:::
+
+## Step six: Validation cohort
+
+::::: columns
+::: {.column width="30%\""}
+-   EXTEND45 cohort of 267,357 participants aged 45 and up
+-   conduct approved by the University of New South Wales HREC
+-   baseline questionnaires collected Jan 2006 - Dec 2009
+-   lab data linked up to July 2013
+:::
+
+::: {.column width="70%\""}
+![](extendconsort.png){style="width: 500px; position: absolute; top: 50px; left: 500px"}
+:::
+:::::
+
+## Step seven: Model performance (**Discrimination**)
+
 ```{r}
-ggplotly(m3_p1)
-```
-:::
+load("rocf.rdata")
 
-
-:::fragment
-```{r}
-ggplotly(m2_p1)
-```
-:::
-
-:::
-
-
-## Validation
-
-:::columns
-::: {.column width=30%"}
-- EXTEND45 cohort of 267,357 participants aged 45 and up
-- conduct approved by the University of New South Wales HREC
-- baseline questionnaires collected Jan 2006 - Dec 2009
-- lab data linked up to July 2013
-:::
-
-::: {.column width=70%"}
-```{r, echo=FALSE}
-DiagrammeR::grViz("digraph {
-  graph [layout = dot, rankdir = TB]
-  
-  node [shape = rectangle]        
-  rec1 [label = 'HbA1c and 2-hour glucose within 6 months (baseline, n=2026)']
-  rec2 [label = 'baseline 2-hour glucose <11.1mmol/L & HbA1c<6.5 (n=1189)']
-  rec3 [label =  'outcome 2-hour glucose identified 1-4yr post baseline (n=452)']
-  rec4 [label = 'restrict to males (n=221)']
-  
-  # edge definitions with the node IDs
-  rec1 -> rec2 -> rec3 -> rec4
-  }",
-                  height = 300)
+rocf
 ```
 
-:::
-:::
-
-## Step four: Model performance (**Discrimination**)
-
-![](ROC.png)
-
-:::notes
-Discrimination- separate individuals who develop events from those who do not
- 
- T4DM AUC 0.820 (95% CI: 0.762-0.877) model has high discriminating ability.
-extend45 - 0.806 (95% CI: 0.735-0.877). 
+::: footer
+pROC::ggroc() function from the pROC package to plot a ggplot version of ROC curve
 :::
 
-## Step four: Model performance (**Calibration**)
+::: notes
+Discrimination- separate individuals who develop events from those who
+do not
 
-::: {layout-ncol=2}
-![](cal_dev.png)
-
-![](cal_v.png)
+T4DM AUC 0.820 (95% CI: 0.762-0.877) model has high discriminating
+ability. extend45 - 0.806 (95% CI: 0.735-0.877).
 :::
 
+## Step eight: Model performance (**Calibration**)
 
-:::notes
-Risk groups: 25%, middle 50%, top 25% of risk
-A comparison of the predicted probability versus the observed probability for each risk group is shown in Figure, demonstrating that there is a higher probability observed than predicted in the model validation cohort.
+```{r, fig.cap="Calibration plot for (A) model development cohort, (B) model validation cohort and (C) for recalibration in the large.", fig.dim=c(8,6)}
+load("g1_t4.Rdata")
+load("g2_t4.Rdata")
+load("g1_extend.Rdata")
+load("g2_extend.Rdata")
+load("g1_extend.m22.Rdata")
+load("g2_extend.m2.Rdata")
+library(patchwork)
+library(ggplot2)
+g1_t4+ theme(axis.text.x = element_blank())+
+  g2_t4+
+  g1_extend2+ theme(axis.text.x = element_blank())+
+  g2_extend+
+  plot_layout(byrow=FALSE, heights = c(1, 0.25))+
+  plot_annotation(tag_levels = list(c("A","", "B",""))) 
 
-Calibration - T4DM
-The Brier score was low at 0.07, the Hosmer–Lemeshow χ^2 statistic was 3.92, (p=0.86), and the p-value for the Osius-Rojek and Stukel tests were 0.71 and 0.04 respectively, indicating good calibration within the model development cohort, other than the Stukel test.
+```
 
-Extend45
-The calibration according to the Hosmer-Lemeshow goodness of fit test was poor (χ^2=106, p<0.001). However the Brier score for assessing prediction accuracy was low at 0.13 and the p-value for the Stukel test was 0.62, indicating a good fit, while the p-value for the Osius-Rojek test was p<0.001. 
+::: notes
+Risk groups: 25%, middle 50%, top 25% of risk A comparison of the
+predicted probability versus the observed probability for each risk
+group is shown in Figure, demonstrating that there is a higher
+probability observed than predicted in the model validation cohort.
 
+Given that the development cohort was the T4DM trial, each participant
+received access to a lifestyle intervention as a part of the trial, and
+therefore it was foreseeable in a cohort of participants not receiving
+access to a lifestyle intervention, the model under predicted the risk
+of type 2 diabetes. This underprediction is not unusual in external
+validation \[24\].
 
-Calibration measures how accurately the model’s predictions match overall observed event rates.
+Calibration - T4DM The Brier score was low at 0.07, the Hosmer–Lemeshow
+χ\^2 statistic was 3.92, (p=0.86), and the p-value for the Osius-Rojek
+and Stukel tests were 0.71 and 0.04 respectively, indicating good
+calibration within the model development cohort, other than the Stukel
+test.
+
+Extend45 The calibration according to the Hosmer-Lemeshow goodness of
+fit test was poor (χ\^2=106, p\<0.001). However the Brier score for
+assessing prediction accuracy was low at 0.13 and the p-value for the
+Stukel test was 0.62, indicating a good fit, while the p-value for the
+Osius-Rojek test was p\<0.001.
+
+Calibration measures how accurately the model’s predictions match
+overall observed event rates.
 :::
 
-## Step five: Recalibration
+## Step nine: Recalibration
 
-![](recalibration.png)
+```{r, fig.cap="Calibration plot for (A) model development cohort, (B) model validation cohort and (C) for recalibration in the large.", fig.dim=c(8,6)}
 
+g1_t4+ theme(axis.text.x = element_blank())+
+  g2_t4+
+  g1_extend2+ theme(axis.text.x = element_blank())+
+  g2_extend+
+  g1_extend.m22+ theme(axis.text.x = element_blank())+
+  g2_extend.m2+
+  plot_layout(byrow=FALSE, heights = c(1, 0.25))+
+  plot_annotation(tag_levels = list(c("A","", "B","", "C"))) 
 
-:::notes
-Given this under-prediction, recalibration in the large was performed and the intercept was estimated as 0.67. Once this was taken into account, the predicted probabilities from the model showed better alignment with the observed probabilities 
+```
+
+::: notes
+Given this under-prediction, recalibration in the large was performed
+and the intercept was estimated as 0.67. Once this was taken into
+account, the predicted probabilities from the model showed better
+alignment with the observed probabilities
 :::
-
 
 ##  {background-image="snip1.PNG" background-size="contain"}
 
-:::footer
-[https://clinical-risk-calculators.sydney.edu.au/Nomograms?ToolId=25](https://clinical-risk-calculators.sydney.edu.au/Nomograms?ToolId=25)
+::: footer
+<https://clinical-risk-calculators.sydney.edu.au/Nomograms?ToolId=25>
 :::
 
+## Prediction: lessons learnt
 
+::: incremental
+
+-   there are many methods that can be used!
+-   the importance of data completeness [(and the need for sensitivity
+    analyses)]{.fragment}
+- we found a really interesting interaction, that would not have been detected otherwise!
+- its very hard to follow reporting guidelines within journal word limits (33 pages of supplementary materials...)
+
+:::
 
 # Inference example: T4DM Mediation analysis
 
+## Mediation analysis
 
-##  Mediation analysis
-
-:::incremental
-- tool to disentangle potential causal pathways in data from clinical trials
-- T4DM found a 40% reduction in diabetes with testosterone treatment 
-- also changes in body composition with T treatment (decreased fat mass, increased muscle mass)
-- was it the direct effect of testosterone treatment? Or the testosterone-induced changes in body composition?
+::: incremental
+-   tool to disentangle potential causal pathways in data from clinical
+    trials
+-   T4DM found a 40% reduction in diabetes with testosterone treatment
+-   also changes in body composition with T treatment (decreased fat
+    mass, increased muscle mass)
+-   was it the direct effect of testosterone treatment? Or the
+    testosterone-induced changes in body composition?
 :::
 
-:::fragment
+::: fragment
 ![](mediation.PNG)
 :::
 
-:::footer
-[https://academic.oup.com/ejendo/article/189/1/50/7219871](https://academic.oup.com/ejendo/article/189/1/50/7219871)
+::: footer
+<https://academic.oup.com/ejendo/article/189/1/50/7219871>
 :::
 
-:::notes 
-In randomised controlled trials (RCTs), the mechanisms by which outcomes are induced by health interventions can be investigated by mediation analysis.1 Mediation analyses have emerged as a powerful tool to disentangle potential causal pathways in data from clinical trials. It has been widely applied in the field of psychology2 but has also been used in other fields to understand how treatments work in RCTs.3 They enable researchers to decompose the treatment effect into an indirect component mediated through given variable(s) and the remaining direct effect of treatment or effects of unmeasured mediators. Identifying these mediating variables can help clinicians refine and adapt to improve the effectiveness of interventions and guide their implementation.
+::: notes
+In randomised controlled trials (RCTs), the mechanisms by which outcomes
+are induced by health interventions can be investigated by mediation
+analysis.1 Mediation analyses have emerged as a powerful tool to
+disentangle potential causal pathways in data from clinical trials. It
+has been widely applied in the field of psychology2 but has also been
+used in other fields to understand how treatments work in RCTs.3 They
+enable researchers to decompose the treatment effect into an indirect
+component mediated through given variable(s) and the remaining direct
+effect of treatment or effects of unmeasured mediators. Identifying
+these mediating variables can help clinicians refine and adapt to
+improve the effectiveness of interventions and guide their
+implementation.
+:::
+
+## Methods used
+
+::: incremental
+- "parallel" mediation
+- counterfactual framework (imputation based approach with robust SE)
+- joint mediation model for each outcome
+- `medflex` package for mediation analyses
+- `mice` for multiple imputation
+
+:::
+
+:::notes
+Assessment of treatment mediation was performed using a counterfactual framework that decomposes the causal effect (treatment effect) into a natural direct effect and natural indirect effect, irrespective of the data distribution or scale of the effect.16‐19 
+
+treatment effect = natural direct effect + natural indirect effect
+
+This therefore overcomes the flaws in the earlier methodology used in mediation analyses.20‐22
+
+Given that we have parallel mediation (mediators and outcomes measured at the same time-point) with baseline covariates, fitting a single model (joint mediation model) for each outcome with adjustment for baseline covariates was performed.15 The causal pathway is given in Figure 1, where the mediators are part of the causal pathway and the baseline covariates are other independent variables that may (or may not) predict outcome. Natural direct and indirect effects were estimated using an imputation-based approach as recommended,19,23 and robust standard errors were used to calculate 95% CI.
+:::
+
+::: notes
+text
+
 :::
 
 ## The causal pathway for T4DM
 
 ![](mediation2.PNG)
 
-:::notes
-At least part of the testosterone treatment effect was found to be mediated by changes in fat mass, abdominal fat, skeletal muscle mass, grip strength, SHBG, and E2, but predominantly by changes in fat mass.
+## Mediation results
+
+```{r}
+
+## primary outcome dataset
+# primary<-read_sas("Y:/Statistics/1 STUDIES/Cardiology and Vascular Diseases/T4DM main study/8.5 Analysis/Data/Derived datasets/outcomes_primary.sas7bdat") %>%
+#   clean_names() %>%
+#   dplyr::select(subjectkey,ogtt_base, ogtt_gt11, change_ogtt)
+# 
+# var_label(primary$ogtt_base) <- "Baseline OGTT (mmol/L)" 
+# 
+# ## treatment dataset
+# treat<-read_sas("Y:/Statistics/1 STUDIES/Cardiology and Vascular Diseases/T4DM main study/8.5 Analysis/Data/Derived datasets/treat.sas7bdat") %>% 
+#   clean_names() %>%
+#   dplyr::select(subjectkey, treat, cxname) %>%
+#   rename(treatment= cxname )
+# 
+# var_label(treat$treatment) <- "Treatment with testosterone"
+# 
+# ## changes in outcomes dataset
+# change24<-read_sas("Y:/Statistics/1 STUDIES/Cardiology and Vascular Diseases/T4DM main study/8.5 Analysis/Data/Derived datasets/outcomes_change.sas7bdat") %>% clean_names()
+# 
+# ## categorical outcomes dataset
+# cat24<-read_sas("Y:/Statistics/1 STUDIES/Cardiology and Vascular Diseases/T4DM main study//8.5 Analysis/Data/Derived datasets/outcomes_binary.sas7bdat") %>% clean_names() %>%
+#   dplyr::select(subjectkey,lifestyle_comp)
+# 
+# ## merge all and label
+# change24 %>%
+#   dplyr::select(subjectkey, leanmass_change, fatmass_change, abdomfat_change, grip_change, grip_base, bmleanms_base, bmapfm_base, bmfatms_base, e2_base, shbg_base, e2_change, shbg_change) %>%
+#   full_join(treat, by="subjectkey") %>%
+#   full_join(cat24, by="subjectkey") %>%
+#   full_join(primary,by="subjectkey")-> trtmed.df
+# 
+# var_label(trtmed.df$bmleanms_base) <- "Baseline skeletal muscle mass (kg)"
+# var_label(trtmed.df$leanmass_change) <- "Change in skeletal muscle mass (kg)"
+# var_label(trtmed.df$bmfatms_base) <- "Baseline Fat Mass (kg)"
+# var_label(trtmed.df$bmapfm_base) <- "Baseline Abdominal fat (%)"
+# var_label(trtmed.df$grip_base) <- "Baseline non-dominant grip strength (kg)"
+# var_label(trtmed.df$grip_change) <- "Change in non-dominant grip strength (kg)"
+# var_label(trtmed.df$shbg_base) <- "Change in SHBG (nmol/L)"
+# var_label(trtmed.df$e2_base) <- "Change in E2 (pmol/L)"
+# 
+# ## add in the baseline covariates 
+# base<-read_sas("Y:/Statistics/1 STUDIES/Cardiology and Vascular Diseases/T4DM main study/8.5 Analysis/Data/Derived datasets/baseline.sas7bdat") %>%
+#   clean_names() 
+# 
+# base %>%
+#   dplyr::select( subjectkey, siteid, waist_gp, gluc_gp,
+#                  age_ge60, iefhxdm, ssri_base, vswght,t_gp, smoker) %>%  
+#   mutate(gluc_gp=as.factor(gluc_gp), 
+#          siteid=as.factor(siteid), 
+#          waist_gp=as.factor(waist_gp), 
+#          age_ge60=as.factor(age_ge60), 
+#          iefhxdm=as.factor(iefhxdm), 
+#          ssri_base=as.factor(ssri_base), 
+#          smoker=as.factor(smoker), 
+#          t_gp = as.factor(t_gp)) %>%
+#   full_join(trtmed.df, by = "subjectkey") %>%
+#   mutate(treat = case_when(treatment =="Placebo" ~ 0, 
+#                            treatment=="Testosterone"~1) %>% as.numeric(), 
+#          siteid = fct_recode(siteid, "61319"= "61352")) %>%
+#   dplyr::select(siteid, waist_gp, 
+#                 age_ge60, iefhxdm, ssri_base,  t_gp,smoker,
+#                 ogtt_gt11,ogtt_base,treat,
+#                 bmleanms_base,leanmass_change, 
+#                 bmfatms_base, fatmass_change,
+#                 bmapfm_base, abdomfat_change, 
+#                 grip_base, grip_change, e2_base, e2_change, 
+#                 shbg_base, shbg_change, change_ogtt, treatment) %>%
+#   drop_na() ->cca.extra
+# 
+# # run each of the categorical models
+# adj.risk.or <-glm(ogtt_gt11 ~ogtt_base+treatment+ 
+#                     siteid+ waist_gp+  age_ge60+iefhxdm+ ssri_base+t_gp+smoker,
+#                   data=cca.extra,
+#                   family = binomial(link="logit"), 
+#                   control=list(maxit=10000)) %>%
+#   tbl_regression(exponentiate = TRUE,show_single_row="treatment",
+#                  include = c("treatment"))
+# 
+# 
+# adj.allbase.or <-glm(ogtt_gt11 ~ogtt_base+treatment+ 
+#                        #baseline mediators
+#                        bmleanms_base+ 
+#                        bmfatms_base+ 
+#                        bmapfm_base+  
+#                        grip_base+ e2_base+shbg_base+ 
+#                        siteid+ waist_gp+  age_ge60+iefhxdm+ ssri_base+t_gp+smoker,
+#                      data=cca.extra,
+#                      family = binomial(link="logit")) %>%
+#   tbl_regression(exponentiate = TRUE,
+#                  show_single_row="treatment",
+#                  include = c("treatment"))
+# 
+# adj.full.or <-glm(ogtt_gt11 ~ogtt_base+treatment+ 
+#                     #baseline + change covariates
+#                     bmleanms_base+leanmass_change+ 
+#                     bmfatms_base+ fatmass_change+
+#                     bmapfm_base+ abdomfat_change+ 
+#                     grip_base+ grip_change+
+#                     e2_base+e2_change+
+#                     shbg_base+ shbg_change+
+#                     siteid+ waist_gp+  age_ge60+iefhxdm+ ssri_base+t_gp+smoker,
+#                   data=cca.extra,
+#                   family = binomial(link="logit")) %>%
+#   tbl_regression(exponentiate = TRUE,
+#                  show_single_row="treatment",
+#                  include = c("treatment"))
+# 
+# # stick them together 
+# models.a<-tbl_stack(list(unadj.or, 
+#                          adj.risk.or, 
+#                          adj.allbase.or,
+#                          adj.full.or))
+# 
+# # plot A
+# models.a$table_body %>%
+#   mutate(name = case_when(tbl_id1==1 ~ "Unadjusted", 
+#                           tbl_id1==2 ~ "Adjusted for baseline risk factors" , 
+#                           tbl_id1==3 ~ "Adjusted for all baseline covariates*" ,
+#                           tbl_id1==4 ~ "Mediation adjusted") %>%
+#            as.factor()) %>%
+#   ggplot(aes(y=fct_reorder(name, -tbl_id1), x=estimate)) +
+#   geom_point(size=3)+
+#   geom_errorbar(aes(xmax=conf.high, xmin=conf.low), size=0.5, width=0.1) +
+#   labs(x="Odds ratio (95% CI)", y="")+
+#   geom_vline(aes(xintercept= 1), linetype="dotted")+
+#   coord_trans(x = scales:::log_trans(base = exp(1))) +
+#   theme_minimal() -> plot.a
+# 
+# # run each of the continuous models
+# unadj.lm<- glm(change_ogtt ~treatment, data=cca.extra) %>%
+#   tbl_regression(show_single_row="treatment") 
+# 
+# adj.risk.lm <-glm(change_ogtt ~ogtt_base+treatment+ 
+#                     siteid+ waist_gp+  age_ge60+iefhxdm+ ssri_base+t_gp+smoker,
+#                   data=cca.extra) %>%
+#   tbl_regression(show_single_row="treatment",
+#                  include = c("treatment"))
+# 
+# 
+# adj.allbase.lm <-glm(change_ogtt ~ogtt_base+treatment+ 
+#                        bmleanms_base+ 
+#                        bmfatms_base+ 
+#                        bmapfm_base+  
+#                        grip_base+ e2_base+shbg_base+ 
+#                        siteid+ waist_gp+  age_ge60+iefhxdm+ ssri_base+t_gp+smoker,
+#                      data=cca.extra) %>%
+#   tbl_regression(show_single_row="treatment",
+#                  include = c("treatment"))
+# 
+# 
+# adj.full.lm <-glm(change_ogtt ~ogtt_base+treatment+ 
+#                     bmleanms_base+leanmass_change+  
+#                     bmfatms_base+ fatmass_change+
+#                     bmapfm_base+  abdomfat_change+ e2_base+e2_change+shbg_base+ shbg_change+
+#                     grip_base+ grip_change+
+#                     siteid+ waist_gp+  age_ge60+iefhxdm+ ssri_base+t_gp+smoker,
+#                   data=cca.extra) %>%
+#   tbl_regression(show_single_row="treatment",
+#                  include = c("treatment"))
+# 
+# # stick them together
+# 
+# models.b<-tbl_stack(list(unadj.lm, 
+#                          adj.risk.lm, 
+#                          adj.allbase.lm,
+#                          adj.full.lm))
+# 
+# # plot B
+# models.b$table_body %>%
+#   mutate(name = case_when(tbl_id1==1 ~ "Unadjusted", 
+#                           tbl_id1==2 ~ "Adjusted for baseline risk factors" , 
+#                           tbl_id1==3 ~ "Adjusted for all baseline covariates*" ,
+#                           tbl_id1==4 ~ "Mediation adjusted") %>%
+#            as.factor()) %>%
+#   ggplot(aes(y=fct_reorder(name, -tbl_id1), x=estimate)) +
+#   geom_point(size=3)+
+#   geom_errorbar(aes(xmax=conf.high, xmin=conf.low), size=0.5, width=0.1) +
+#   labs(x="Change in OGTT (95% CI)", y="")+
+#   theme(axis.ticks.y = element_blank())+
+#   geom_vline(aes(xintercept= 0), linetype="dotted") +
+#   theme_minimal()+
+#   scale_y_discrete(labels=c("Unadjusted" = "",
+#                             "Adjusted for baseline risk factors" = "",
+#                             "Adjusted for all baseline covariates*"="",
+#                             "Mediation adjusted"="")) -> plot.b
+```
+![](medresults.png)
+
+## But which is the primary mediator??
+
+![](medtable.png)
+
+## Mediation wrapup
+
+
+- TBD
+
+
+::: notes
+At least part of the testosterone treatment effect was found to be
+mediated by changes in fat mass, abdominal fat, skeletal muscle mass,
+grip strength, SHBG, and E2, but predominantly by changes in fat mass.
 :::
 
-# Next steps (prediction)
+# Next steps
 
+::: incremental
+-   model stability (add reference)
+-   development of risk prediction models within individual patient data
+    meta-analysis projects
+-   explore changing risk factors over the clinical trial, and the
+    effect on prediction
+- effects of partial clustering on prediction
+-   inference when there are non-proportional hazards
+:::
 
-- model stability (add reference)
-- development of risk prediction models within individual patient data meta-analysis projects
-- explore changing risk factors over the clinical trial, and the effect on prediction
+## [**Thank you!**]{style="color:red;"} {.center}
 
-- inference when there are non-proportional hazards
-
-## <span style="color:red;">**Thank you!**</span>  {.center}
-
-- {{< fa circle-question size=2x >}}
- questions? 
-- {{< fa comments size=2x >}}
- come chat with me if you want to know more
-- {{< fa chalkboard size=2x >}} Slides available at: [https://kristyrobledo.github.io/predictionmodelling_talk/](https://kristyrobledo.github.io/predictionmodelling_talk/)
-- Prediction paper code: 
-- Mediation paper code: [https://github.com/kristyrobledo/T4DM_mediation_paper](https://github.com/kristyrobledo/T4DM_mediation_paper)
+-   {{< fa circle-question size=2x >}} questions?
+-   {{< fa comments size=2x >}} come chat with me if you want to know
+    more
+-   {{< fa chalkboard size=2x >}} Slides available at:
+    <https://kristyrobledo.github.io/predictionmodelling_talk/>
+-   Prediction paper code: <https://github.com/kristyrobledo/diabetes_riskscore>
+-   Mediation paper code: 
+    <https://github.com/kristyrobledo/T4DM_mediation_paper>
 
 
