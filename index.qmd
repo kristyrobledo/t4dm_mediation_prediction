@@ -1,5 +1,5 @@
 ---
-title: "Beyond the Primary Outcome: Mediation and Predictive Insights in the T4DM trial"
+title: "Beyond the Primary Outcome: Mediation and Predictive Insights from clinical trials"
 subtitle: "AUSTRiM presentation April, 2025"
 author: "Dr Kristy Robledo"
 institute: "NHMRC CTC, The University of Sydney"
@@ -45,8 +45,8 @@ library(labelled)
 
 -   Prediction versus inference
 -   What is prediction modelling?
--   Prediction example: T4DM risk score model
--   Inference example: T4DM Mediation analysis
+-   Prediction example: Risk score model
+-   Inference example: Mediation analysis
 -   The future...
 
 ## [**Inference**]{style="color:red;"} (explaining) versus [**Prediction**]{style="color:blue;"} (future) {.center}
@@ -63,8 +63,9 @@ library(labelled)
 
 [**Explaining**]{style="color:red;"}
 
--   collect data from given sample
--   apply models to test hypotheses (explain relationships)
+- collect data from given sample (e.g. clinical trial)
+- apply models to test hypotheses (explain relationships)
+- inference can be causal 
 
 </center>
 :::
@@ -106,9 +107,15 @@ different approaches
 
 # What is prediction modelling?
 
-::: notes
-Speaker notes go here. Press `s` to see.
+::: incremental
+
+- prognostic modelling
+- risk prediction modelling
+- risk calculators
+
 :::
+
+
 
 ## [Diagnostic]{style="color:red;"} vs [Prognostic]{style="color:blue;"} models {.center}
 
@@ -149,6 +156,10 @@ Speaker notes go here. Press `s` to see.
 :::
 :::::
 :::::::::::
+
+::: notes
+
+:::
 
 ## Pipeline for translation of a clinical trial into practice
 
@@ -248,6 +259,8 @@ informaiton about harm from clinical trial
 
 basically - baseline risk + clinical trial effect -\> personalised care
 -\> policy
+
+Doctors and other healthcare professionals use statements about prognosis to inform individuals and their families about likely future outcomes and help make decisions with individuals and their families about the best care and treatments to improve those outcomes.
 :::
 
 # Methods for developing predictive models
@@ -321,6 +334,37 @@ webshot("tmp.html", "wordcloud.png", delay = 10, vwidth=600, vheight = 400)
 ```
 
 ##  {background-image="wordcloud.png" background-size="contain"}
+
+## Sample size assumptions
+
+
+:::::: columns
+::: {.column width="50%\""}
+- 665 participants available for development model
+- overall event rate of 10% at 2 years
+- C-statistic of ~0.78 (based on AUSDIAB)
+- Cox-Snell R-squared value of 0.2 (conservative anticipated model performance reflecting signal:noise, with low being more noise)
+:::
+::::::
+
+:::fragment
+***16 risk factors can be considered before overfitting becomes a concern***
+:::
+
+:::fragment
+![](ss.png){style="width: 400px;height:400px; position: absolute; top: 50px; left: 550px"}
+:::
+
+:::footer
+Riley RD et al. Calculating the sample size required for developing a clinical prediction model. BMJ 2020. <https://doi.org/10.1136/bmj.m441>.
+
+Further guidance:
+<https://www.prognosisresearch.com/guidance-prognostic-models>
+:::
+
+:::notes
+ sample size should be at least large enough to minimise model overfitting and to target sufficiently precise model predictions
+:::
 
 ## Preliminary step: Data completeness
 
@@ -402,7 +446,7 @@ plotmo::plot_glmnet() to plot a glmnet::glmnet() object
 :::
 
 ::: {.column width="50%\""}
-```{r, fig.dim=c(3,3)}
+```{r, fig.dim=c(3,4)}
 load("lasso_cv.Rdata")
 plotly::ggplotly(lasso.cv +
                    xlab("Log(lambda)") )
@@ -422,6 +466,9 @@ plotly::ggplotly(lasso.cv +
 plotly::ggplotly() to interactively plot a ggplot object
 :::
 
+:::notes
+Least absolute shrinkage and selection operator (LASSO) penalisation was performed to select risk factors, prevent over-fitting, and reduce the dimensions of the prediction model [12]. To determine the penalty factor (λ), tenfold cross validation was performed, to maximise the area under the curve (AUC).
+:::
 ## Step four: exploration of interactions
 
 ```{r}
@@ -442,34 +489,36 @@ load("distp.Rdata")
 ::::::::: columns
 ::::: {.column width="50%\""}
 ::: fragment
-```{r, fig.dim=c(4,4)}
-ggplotly(p1)
+```{r, fig.dim=c(3,3)}
+(p1)
 ```
 :::
 
 ::: fragment
-```{r, fig.dim=c(4,4)}
-ggplotly(m1_p1+theme(legend.position = "none"))
+```{r, fig.dim=c(3,3)}
+(m1_p1+theme(legend.position = "none"))
 ```
 :::
 :::::
 
 ::::: {.column width="50%\""}
 ::: fragment
-```{r,  fig.dim=c(4,4)}
-ggplotly(m3_p1+theme(legend.position = "none"))
+```{r,  fig.dim=c(3,3)}
+(m3_p1+theme(legend.position = "none"))
 ```
 :::
 
 ::: fragment
-```{r,  fig.dim=c(4,4)}
-ggplotly(m2_p1+theme(legend.position = "none"))
+```{r,  fig.dim=c(3,3)}
+(m2_p1)
 ```
 :::
 :::::
 :::::::::
 
 ::: notes
+Linear on the logit. 
+
 There was no interaction between treatment and baseline glucose, or
 treatment and age at baseline. Let us investigate the following four
 models for the interaction between Hba1c and treatment. Note that the
@@ -490,7 +539,6 @@ C-statistic to other models.
 ## 3D plot
 
 
-##Setup for figure
 ```{r}
 load("baselinemodel_age.Rdata")
 
@@ -587,22 +635,8 @@ the addition of an additional covariate was 0.827, with the inclusion of
 age.
 :::
 
-## Step six: Validation cohort
 
-::::: columns
-::: {.column width="30%\""}
--   EXTEND45 cohort of 267,357 participants aged 45 and up
--   conduct approved by the University of New South Wales HREC
--   baseline questionnaires collected Jan 2006 - Dec 2009
--   lab data linked up to July 2013
-:::
-
-::: {.column width="70%\""}
-![](extendconsort.png){style="width: 500px; position: absolute; top: 50px; left: 500px"}
-:::
-:::::
-
-## Step seven: Model performance (**Discrimination**)
+## Step six: Model performance (**Discrimination**)
 
 ```{r}
 load("rocf.rdata")
@@ -620,11 +654,15 @@ do not
 
 T4DM AUC 0.820 (95% CI: 0.762-0.877) model has high discriminating
 ability. extend45 - 0.806 (95% CI: 0.735-0.877).
+
+Risk groups: 25%, middle 50%, top 25% of risk
+A comparison of the predicted probability versus the observed probability for each risk group is shown in Figure, demonstrating that there is a higher probability observed than predicted in the model validation cohort.
+
 :::
 
-## Step eight: Model performance (**Calibration**)
+## Step seven: Model performance (**Calibration**)
 
-```{r, fig.cap="Calibration plot for (A) model development cohort, (B) model validation cohort and (C) for recalibration in the large.", fig.dim=c(8,6)}
+```{r, fig.cap="Calibration plot for (A) model development cohort and (B) model validation cohort", fig.dim=c(8,6)}
 load("g1_t4.Rdata")
 load("g2_t4.Rdata")
 load("g1_extend.Rdata")
@@ -643,6 +681,10 @@ g1_t4+ theme(axis.text.x = element_blank())+
 ```
 
 ::: notes
+
+Calibration measures how accurately the model’s predictions match
+overall observed event rates.
+
 Risk groups: 25%, middle 50%, top 25% of risk A comparison of the
 predicted probability versus the observed probability for each risk
 group is shown in Figure, demonstrating that there is a higher
@@ -667,13 +709,11 @@ assessing prediction accuracy was low at 0.13 and the p-value for the
 Stukel test was 0.62, indicating a good fit, while the p-value for the
 Osius-Rojek test was p\<0.001.
 
-Calibration measures how accurately the model’s predictions match
-overall observed event rates.
 :::
 
-## Step nine: Recalibration
+## Step eight: Recalibration
 
-```{r, fig.cap="Calibration plot for (A) model development cohort, (B) model validation cohort and (C) for recalibration in the large.", fig.dim=c(8,6)}
+```{r, fig.cap="Calibration plot for (A) model development cohort, (B) model validation cohort and (C) for recalibration in the large.", fig.dim=c(10,6)}
 
 g1_t4+ theme(axis.text.x = element_blank())+
   g2_t4+
@@ -756,7 +796,16 @@ implementation.
 - joint mediation model for each outcome
 - `medflex` package for mediation analyses
 - `mice` for multiple imputation
+- reporting criteria
 
+:::
+
+:::footer
+Lange T, Vansteelandt S, Bekaert M. A simple unified approach for estimating natural direct and indirect effects. American Journal of Epidemiology 2012. <https://doi.org/10.1093/aje/kwr525>
+
+Lange T, Rasmussen M, Thygesen LC. Assessing natural direct and indirect effects through multiple pathways. American Journal of Epidemiology 2013. <https://doi.org/10.1093/aje/kwt270>
+
+Lange T, Hansen KW, Sørensen R, Galatius S. Applied mediation analyses: A review and tutorial. Epidemiol Health 2017. <https://doi.org/10.4178/epih.e2017035>
 :::
 
 :::notes
@@ -766,17 +815,17 @@ treatment effect = natural direct effect + natural indirect effect
 
 This therefore overcomes the flaws in the earlier methodology used in mediation analyses.20‐22
 
-Given that we have parallel mediation (mediators and outcomes measured at the same time-point) with baseline covariates, fitting a single model (joint mediation model) for each outcome with adjustment for baseline covariates was performed.15 The causal pathway is given in Figure 1, where the mediators are part of the causal pathway and the baseline covariates are other independent variables that may (or may not) predict outcome. Natural direct and indirect effects were estimated using an imputation-based approach as recommended,19,23 and robust standard errors were used to calculate 95% CI.
 :::
 
-::: notes
-text
-
-:::
 
 ## The causal pathway for T4DM
 
 ![](mediation2.PNG)
+
+::: notes
+
+Given that we have parallel mediation (mediators and outcomes measured at the same time-point) with baseline covariates, fitting a single model (joint mediation model) for each outcome with adjustment for baseline covariates was performed.15 The causal pathway is given in Figure 1, where the mediators are part of the causal pathway and the baseline covariates are other independent variables that may (or may not) predict outcome. Natural direct and indirect effects were estimated using an imputation-based approach as recommended,19,23 and robust standard errors were used to calculate 95% CI.
+:::
 
 ## Mediation results
 
@@ -966,11 +1015,26 @@ text
 #                             "Adjusted for all baseline covariates*"="",
 #                             "Mediation adjusted"="")) -> plot.b
 ```
-![](medresults.png)
+![](medresults.png){style="width: 700px;height:600px;"}
+::: notes
+For both outcomes, the estimated direct effect of testosterone, and the estimated indirect effect, mediated through the six mediators, are given in Figure 3. For a subject with given mean baseline covariates, altering treatment from placebo to testosterone while controlling for the given mediators, decreases the odds of 2-hour glucose ≥ 11.1mmol/L by a factor of 0.77 (OR 0.77; 95% CI: 0.44-1.35; direct effect of testosterone treatment compared to placebo). Altering mediator levels as observed in those allocated to placebo to those allocated testosterone, while controlling for baseline covariates, decreases the odds of diabetes at 2-years by a factor of 0.62 (95% CI: 0.45-0.86; indirect effect of testosterone treatment compared to placebo). This gives a proportion mediated of 65.1% for 2-hour glucose ≥ 11.1mmol/L. Similarly, the direct effect for the change in 2-hour glucose is -0.26mmol/L (95% CI: -0.69-0.17) and the indirect effect is -0.50mmol/L (95% CI: -0.77 to -0.23), giving a proportion mediated of 65.9%. There was no evidence of interactions between any of the mediators and treatment (all p-values>0.61).
+:::
+
+## Sensitivity analyses
+
+![](med_mi.png)
+
+::: notes
+A sensitivity analysis was performed to explore the effects of missing data, using multiple imputation. The direct and indirect effects in supplementary Table 2 show that the effect of testosterone is still partially, but not wholly mediated, by these given six variables, with the proportion mediated slightly attenuated from 65% to ~50%. 
+:::
 
 ## But which is the primary mediator??
 
 ![](medtable.png)
+
+::: notes
+While we have shown that the effects of testosterone are partially mediated through changes in fat mass, skeletal muscle mass, abdominal fat percentage, grip strength, E2, and SHBG, it is unclear which of these (if any) is the primary mediator. However, if we explore the effects of the mediators in the full model (Table 1) we can see that the change in fat mass retains a relationship with outcome for 2-hour glucose ≥ 11.1mmol/L, after accounting for the effect of testosterone. Similar results are seen for change in 2-hour glucose, with changes in fat mass the only mediator prognostic for outcome. A one kg decrease in fat mass at 2-years from baseline gives a mean decrease in 2-hour glucose of 0.20 mmol/L (95% CI: 0.12 to 0.28) or decreases the odds by 0.81 (OR: 1/1.23 = 0.81; 95% CI: 0.72 to 0.92) for 2-hour glucose ≥ 11.1mmol/L, after adjustment for baseline covariates, treatment, and other mediators.
+:::
 
 ## Mediation wrapup
 
