@@ -1,6 +1,6 @@
 ---
 title: "Beyond the Primary Outcome: Mediation and Predictive Insights from clinical trials"
-subtitle: "AUSTRiM presentation April, 2025"
+subtitle: "AusTriM presentation April, 2025"
 author: "Dr Kristy Robledo"
 institute: "NHMRC CTC, The University of Sydney"
 format:
@@ -1093,13 +1093,12 @@ has provided insight into the mechanisms of action of testosterone
 # Next steps
 
 ::: incremental
--   explore model stability (Riley 2023 <https://doi.org/10.1002/bimj.202200302>)
--   development of risk prediction models within individual patient data
-    meta-analysis project
--   explore changing risk factors over the clinical trial, and the
-    effect on prediction
+- explore model stability (Riley 2023 <https://doi.org/10.1002/bimj.202200302>)
+- development of risk prediction models within individual patient data meta-analysis project
+- challenges of using machine learning for predicion within clinical trials
+- explore changing risk factors over the clinical trial, and affects on prediction
 - effects of partial clustering on prediction
--   inference when there are non-proportional hazards
+- inference when there are non-proportional hazards
 :::
 
 ## [**Thank you!**]{style="color:red;"} {.center}
