@@ -164,98 +164,98 @@ different approaches
 ## Pipeline for translation of a clinical trial into practice
 
 :::: fragment
-::: {data-id="box1" style="width: 200px; height: 150px; border:5px solid green; margin: 10px; position: absolute; top: 300px; left: 50px"}
+::: {data-id="box1" style="width: 200px; height: 150px; border:5px solid green; margin: 10px; position: absolute; top: 300px; left: 0px"}
 <center>**Individual** absolute risk (current treatment)</center>
 :::
 ::::
 
 :::: fragment
-::: {data-id="box2" style="background: green; width: 200px; height: 150px; margin: 10px; border-radius: 50px; position: absolute; top: 100px; left: 50px"}
+::: {data-id="box2" style="background: green; width: 200px; height: 150px; margin: 10px; border-radius: 50px; position: absolute; top: 100px; left: 0px"}
 <center><br><span style="color:white;">**Risk prediction
 model**<span></center>
 :::
 ::::
 
 :::: fragment
-::: {data-id="box2" style="width: 200px; height: 50px; margin: 10px; position: absolute; top: 250px; left: 50px"}
+::: {data-id="box2" style="width: 200px; height: 50px; margin: 10px; position: absolute; top: 250px; left: 85px"}
 {{< fa arrow-down size=1x >}}
 :::
 ::::
 
 :::: fragment
-::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 275px"}
+::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 225px"}
 <center>**x**</center>
 :::
 ::::
 
 :::: fragment
-::: {data-id="box3" style="width: 200px; height: 150px; border:5px solid blue; margin: 10px; position: absolute; top: 300px; left: 350px"}
+::: {data-id="box3" style="width: 200px; height: 150px; border:5px solid blue; margin: 10px; position: absolute; top: 300px; left: 300px"}
 <center>Relative risk reduction (new treatment)</center>
 :::
 ::::
 
 ::: fragment
-![](triangle.png){style="width: 300px; position: absolute; top: 150px; left: 350px"}
+![](triangle.png){style="width: 300px; position: absolute; top: 150px; left: 300px"}
 :::
 
 :::: fragment
-::: {data-id="box2" style="width: 200px; height: 50px; margin: 10px; position: absolute; top: 250px; left: 350px"}
+::: {data-id="box2" style="width: 200px; height: 50px; margin: 10px; position: absolute; top: 250px; left: 420px"}
 {{< fa arrow-down size=1x >}}
 :::
 ::::
 
 :::: fragment
-::: {data-id="box2" style="background: blue; width: 350px; height: 80px; margin: 10px; border-radius: 50px; position: absolute; top: 50px; left: 325px"}
+::: {data-id="box2" style="background: blue; width: 350px; height: 80px; margin: 10px; border-radius: 50px; position: absolute; top: 50px; left: 275px"}
 <center><span style="color:white;">**Predictive Biomarker** (clinical
 trial)<span></center>
 :::
 ::::
 
 :::: fragment
-::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 120px; left: 470px"}
+::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 120px; left: 420px"}
 {{< fa arrow-down size=1x >}}
 :::
 ::::
 
 :::: fragment
-::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 575px"}
+::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 525px"}
 <center>**=**</center>
 :::
 ::::
 
 :::: fragment
-::: {data-id="box3" style="width: 200px; height: 150px; border:5px solid black; margin: 10px; position: absolute; top: 300px; left: 650px"}
+::: {data-id="box3" style="width: 200px; height: 150px; border:5px solid black; margin: 10px; position: absolute; top: 300px; left: 590px"}
 <center>**Personalised** absolute risk reduction</center>
 :::
 ::::
 
 :::: fragment
-::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 850px"}
+::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 810px"}
 {{< fa arrow-right size=1x >}}
 :::
 ::::
 
 :::: fragment
-::: {data-id="box3" style="background: orange; width: 100px; height: 100px;  margin: 10px; position: absolute; top: 325px; left: 900px"}
+::: {data-id="box3" style="background: orange; width: 100px; height: 100px;  margin: 10px; position: absolute; top: 325px; left: 850px"}
 <center>size of benefit</center>
 :::
 ::::
 
 :::: fragment
-::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 1000px"}
+::: {data-id="box2" style="width: 50px; height: 150px; margin: 10px; position: absolute; top: 350px; left: 960px"}
 {{< fa arrow-right size=1x >}}
 :::
 ::::
 
 :::: fragment
-::: {data-id="box1" style="background: #ee7600; width: 300px; height: 250px; border-radius: 60px; margin: 10px; position: absolute; top: 250px; left: 1050px"}
-<center><br><br>**Decision for practice and policy**</center>
+::: {data-id="box1" style="background: #ee7600; width: 250px; height: 250px; border-radius: 60px; margin: 10px; position: absolute; top: 250px; left: 1000px"}
+<center><br><br>Decision for practice/policy</center>
 :::
 ::::
 
 ::: notes
 also Resources/ Community values and Patient's preferences and utilities
-informaiton about harm from clinical trial
+information about harm from clinical trial
 
 basically - baseline risk + clinical trial effect -\> personalised care
 -\> policy
@@ -739,7 +739,7 @@ alignment with the observed probabilities
 <https://clinical-risk-calculators.sydney.edu.au/Nomograms?ToolId=25>
 :::
 
-## Prediction: lessons learnt
+# Prediction: lessons learnt
 
 ::: incremental
 
@@ -786,7 +786,17 @@ effect of treatment or effects of unmeasured mediators. Identifying
 these mediating variables can help clinicians refine and adapt to
 improve the effectiveness of interventions and guide their
 implementation.
+AIM: 
+Determine whether, and if so, the extent to which, changes in total fat mass (kg), abdominal fat mass (%), lean mass (kg), and non-dominant handgrip (kg) mediate the effect of testosterone treatment on glycaemia.
+
+Risk factors (center, age group, waist circumference, 2-h glucose on OGTT, smoking, first‐degree family history of T2D and baseline serum testosterone)
+Mediators: fat mass, %abdominal fat, skeletal muscle mass, grip strength
+
 :::
+
+## Reporting of mediation analyses
+
+![](reporting.png)
 
 ## Methods used
 
@@ -1016,7 +1026,8 @@ Given that we have parallel mediation (mediators and outcomes measured at the sa
 #                             "Mediation adjusted"="")) -> plot.b
 ```
 ![](medresults.png){style="width: 700px;height:600px;"}
-::: notes
+
+:::notes
 For both outcomes, the estimated direct effect of testosterone, and the estimated indirect effect, mediated through the six mediators, are given in Figure 3. For a subject with given mean baseline covariates, altering treatment from placebo to testosterone while controlling for the given mediators, decreases the odds of 2-hour glucose ≥ 11.1mmol/L by a factor of 0.77 (OR 0.77; 95% CI: 0.44-1.35; direct effect of testosterone treatment compared to placebo). Altering mediator levels as observed in those allocated to placebo to those allocated testosterone, while controlling for baseline covariates, decreases the odds of diabetes at 2-years by a factor of 0.62 (95% CI: 0.45-0.86; indirect effect of testosterone treatment compared to placebo). This gives a proportion mediated of 65.1% for 2-hour glucose ≥ 11.1mmol/L. Similarly, the direct effect for the change in 2-hour glucose is -0.26mmol/L (95% CI: -0.69-0.17) and the indirect effect is -0.50mmol/L (95% CI: -0.77 to -0.23), giving a proportion mediated of 65.9%. There was no evidence of interactions between any of the mediators and treatment (all p-values>0.61).
 :::
 
@@ -1024,36 +1035,67 @@ For both outcomes, the estimated direct effect of testosterone, and the estimate
 
 ![](med_mi.png)
 
-::: notes
+:::notes
 A sensitivity analysis was performed to explore the effects of missing data, using multiple imputation. The direct and indirect effects in supplementary Table 2 show that the effect of testosterone is still partially, but not wholly mediated, by these given six variables, with the proportion mediated slightly attenuated from 65% to ~50%. 
+
+Additional sensitivity analyses explored interactions between (1) treatment and mediators and (2) baseline confounders and mediators and found no evidence of interactions. WE also assessed if there were any additional mediatiors by including additional sex steroids. 
 :::
 
 ## But which is the primary mediator??
 
 ![](medtable.png)
 
-::: notes
+:::notes
 While we have shown that the effects of testosterone are partially mediated through changes in fat mass, skeletal muscle mass, abdominal fat percentage, grip strength, E2, and SHBG, it is unclear which of these (if any) is the primary mediator. However, if we explore the effects of the mediators in the full model (Table 1) we can see that the change in fat mass retains a relationship with outcome for 2-hour glucose ≥ 11.1mmol/L, after accounting for the effect of testosterone. Similar results are seen for change in 2-hour glucose, with changes in fat mass the only mediator prognostic for outcome. A one kg decrease in fat mass at 2-years from baseline gives a mean decrease in 2-hour glucose of 0.20 mmol/L (95% CI: 0.12 to 0.28) or decreases the odds by 0.81 (OR: 1/1.23 = 0.81; 95% CI: 0.72 to 0.92) for 2-hour glucose ≥ 11.1mmol/L, after adjustment for baseline covariates, treatment, and other mediators.
 :::
 
-## Mediation wrapup
+# Conclusions
 
+:::incremental
+- first mediation analysis for testosterone treatment
+- at least part (but not all) was mediated by changes in fat mass,
+  abdominal fat, skeletal muscle mass, grip strength, SHBG, and E2
+- appeared to be driven by changes in fat mass
+- future research into other mediation pathways
+:::
 
-- TBD
-
-
-::: notes
+:::notes
 At least part of the testosterone treatment effect was found to be
 mediated by changes in fat mass, abdominal fat, skeletal muscle mass,
 grip strength, SHBG, and E2, but predominantly by changes in fat mass.
+
+Evidence of some, but not all T effect is 
+Mediated through fat mass, % abdominal fat, lean mass, and grip strength 
+Predominantly via a decrease in fat mass
+
+Limited mediation effect of skeletal muscle mass & strength. Possible reasons: 
+Fibre type differences (T vs Exercise vs Diet) 
+
+Future research - explore other potential mediation paths
+Inflammatory cytokines
+Adiponectin
+GLUT-4
+
 :::
+
+# Referenced in guidelines!
+
+  
+![](guidelines.png)
+
+:::notes
+has provided insight into the mechanisms of action of testosterone
+  treatment that has informed guidelines
+:::
+
+# {background-image="ack.png" background-size="contain"}
 
 # Next steps
 
 ::: incremental
--   model stability (add reference)
+-   explore model stability (Riley 2023 <https://doi.org/10.1002/bimj.202200302>)
 -   development of risk prediction models within individual patient data
-    meta-analysis projects
+    meta-analysis project
 -   explore changing risk factors over the clinical trial, and the
     effect on prediction
 - effects of partial clustering on prediction
@@ -1063,12 +1105,11 @@ grip strength, SHBG, and E2, but predominantly by changes in fat mass.
 ## [**Thank you!**]{style="color:red;"} {.center}
 
 -   {{< fa circle-question size=2x >}} questions?
--   {{< fa comments size=2x >}} come chat with me if you want to know
-    more
+-   {{< fa comments size=2x >}} chat with me [kristy.robledo@sydney.edu.au](mailto:kristy.robledo@sydney.edu.au)
 -   {{< fa chalkboard size=2x >}} Slides available at:
     <https://kristyrobledo.github.io/predictionmodelling_talk/>
--   Prediction paper code: <https://github.com/kristyrobledo/diabetes_riskscore>
--   Mediation paper code: 
+-   {{< fa laptop-code size=2x >}} Prediction paper code: <https://github.com/kristyrobledo/diabetes_riskscore>
+-   {{< fa laptop-code size=2x >}} Mediation paper code: 
     <https://github.com/kristyrobledo/T4DM_mediation_paper>
 
 
